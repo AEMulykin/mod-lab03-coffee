@@ -3,99 +3,96 @@
 #include <string>
 #include <stdexcept>
 #include "Automata.h"
+
 using std::cout;
 using std::endl;
 using std::invalid_argument;
 using std::domain_error;
-Automata::Automata() : state(OFF), cash(0), option(0) {
-    DisplayState();
-}
-void Automata::DisplayMenu() const {
-    for (int i = 0; i < sizeof(menu)/sizeof(menu[0]); i++) {
-        cout << i + 1 << ": " << menu[i] << " - " << prices[i] << "₽" << endl;
-    }
-}
-void Automata::PowerOn() {
-    if (state != OFF) {
-        throw domain_error("Machine is already running.");}
-    state = WAIT;
-    cout << "Machine activated." << endl;
-    DisplayMenu();
-    DisplayState();
-}
-void Automata::PowerOff() {
-    if (state != WAIT) {
-        throw domain_error("Machine is not in a wait state.");}
-    state = OFF;
-    DisplayState();
-}
-void Automata::InsertCoin(int amount) {
-    if (state != WAIT && state != ACCEPT) {
-        throw domain_error("Machine is not ready to accept money.");
-    }
 
-    if (amount < 0) {
-        throw invalid_argument("Inserted amount cannot be negative.");
-    }
-    state = ACCEPT;
-    cash += amount;
+Automata::Automata() : state_(States::OFF), cash_(0), option_(0) {
     DisplayState();
 }
+
+void Automata::DisplayMenu() const {
+    for (size_t i = 0; i < menu_.size(); ++i) {
+        cout << i + 1 << ": " << menu_[i] << " - " << prices_[i] << " RUB" << endl;
+    }
+}
+
+void Automata::TurnOn() {
+    if (state_ == States::OFF) {
+        state_ = States::WAIT;
+        cout << "The drink machine is on." << endl;
+        DisplayMenu();
+        DisplayState();
+    } else {
+        throw domain_error("Error: The machine is already on.");
+    }
+}
+
+void Automata::TurnOff() {
+    if (state_ == States::WAIT) {
+        state_ = States::OFF;
+        DisplayState();
+    } else {
+        throw domain_error("Error: The machine is not in a waiting state.");
+    }
+}
+
+void Automata::InsertCoins(int amount) {
+    if (state_ == States::WAIT || state_ == States::ACCEPT) {
+        if (amount < 0) {
+            throw invalid_argument("Error: The inserted amount cannot be negative.");
+        }
+        state_ = States::ACCEPT;
+        cash_ += amount;
+        DisplayState();
+    } else {
+        throw domain_error("Error: The machine is not ready to accept money.");
+    }
+}
+
 void Automata::CancelTransaction() {
-    if (state != ACCEPT && state != CHECK) {
-        throw domain_error("Cannot cancel at the current stage.");
+    if (state_ == States::ACCEPT || state_ == States::CHECK) {
+        state_ = States::WAIT;
+        cout << "The transaction has been canceled." << endl;
+        ReturnChange();
+        DisplayState();
+    } else {
+        throw domain_error("Error: The machine is not in a cancellable state.");
     }
-    cout << "Transaction cancelled"<< cash << "₽" << endl;
-    cash = 0;
-    state = WAIT;
-    DisplayState();
 }
-void Automata::SelectOption(int choice) {
-    if (state != ACCEPT) {
-        throw domain_error("Machine is not ready to make a selection.");
+
+void Automata::SelectOption(int option) {
+    if (state_ == States::ACCEPT) {
+        if (option <= 0 || option > static_cast<int>(menu_.size())) {
+            throw invalid_argument("Error: The selected option is not valid.");
+        }
+        state_ = States::CHECK;
+        option_ = option - 1;
+        cout << "You have selected: " << menu_[option_] << endl;
+        DisplayState();
+    } else {
+        throw domain_error("Error: The machine is not ready to make a selection.");
     }
-    if (choice < 0 || choice >= sizeof(menu)/sizeof(menu[0])) {
-        throw invalid_argument("Selected option is not valid.");
-    }
-    state = CHECK;
-    option = choice;
-    cout << "You selected: " << menu[option] << endl;
-    DisplayState();
 }
-bool Automata::IsPaymentSufficient() {
-    if (state != CHECK) {
-        throw domain_error("Payment can only be checked in CHECK state.");
+
+bool Automata::ConfirmSelection() const {
+    if (state_ == States::CHECK) {
+        if (cash_ >= prices_[option_]) {
+            return true;
+        }
+        DisplayState();
+        return false;
+    } else {
+        throw domain_error("Error: The selection cannot be confirmed at this state.");
     }
-    DisplayState();
-    return cash >= prices[option];
 }
-void Automata::MakeDrink() {
-    if (state != CHECK) {
-        throw domain_error("Machine is not in a proper state to make a drink.");
+
+void Automata::PrepareDrink() {
+    if (state_ == States::CHECK && ConfirmSelection()) {
+        state_ = States::COOK;
+        cash_ -= prices_[option_];
+        cout << "Your drink " << menu_[option_] << " is being prepared..." << endl;
+        DisplayState();
     }
-    state = COOK;
-    cout << "Preparing: " << menu[option] << endl;
-    cash -= prices[option];
-    DisplayState();
-}
-void Automata::CompleteTransaction() {
-    if (state != COOK) {
-        throw domain_error("Machine has not completed drink preparation.");
-    }
-    if (cash > 0) {
-        cout << "Please, take your change: " << cash << "₽" << endl;
-    }
-    cash = 0;
-    state = WAIT;
-    DisplayState();
-}
-void Automata::DisplayState() const {
-    static const char* StateMessages[] = {
-        "The machine is idle.",
-        "The machine is ready to accept money.",
-        "The machine has received money.",
-        "The machine is checking the inserted coins.",
-        "The machine is preparing your drink."
-    };
-    cout << StateMessages[state] << endl;
-}
