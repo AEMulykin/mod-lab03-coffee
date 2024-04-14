@@ -12,7 +12,7 @@ enum class States {
     Cook    // Приготовление
 };
 class Automata {
-private:
+ private:
     States state_;  // Текущее состояние автомата
     int cash_;      // Текущая сумма денег в автомате
     int option_;    // Выбор напитка пользователем
@@ -31,28 +31,28 @@ private:
     static constexpr std::array<int, 10> prices_ = {
         80, 100, 150, 180, 160, 190, 120, 120, 140, 170
     };
-public:
-    Automata(); // Конструктор    
-    void On();                   
-// Включение автомата
-    void Off();                
-// Выключение автомата
+ public:
+    Automata();//Конструктор
+void On();                   
+//Включение автомата
+void Off();
+//Выключение автомата
     void InsertCoin(int amount);
-// Внесение денег
+//Внесение денег
     void DisplayMenu() const;
-// Отображение меню
+//Отображение меню
     std::string GetCurrentState() const;
-// Получение описания текущего состояния
+//Получение описания текущего состояния
     void SelectDrink(int option);
-// Выбор напитка пользователем
-    bool IsSufficientAmount() const;    
-// Проверка достаточности внесенной суммы
-    int ReturnChange();         
-// Возврат сдачи/денег
-    void Cancel();               
+//Выбор напитка пользователем
+    bool IsSufficientAmount() const;
+//Проверка достаточности внесенной суммы
+int ReturnChange();
+//Возврат сдачи/денег
+    void Cancel();
 // Отмена сессии
-    void PrepareDrink();         
+    void PrepareDrink();
 // Имитация процесса приготовления напитка
-    void CompleteService();     
+    void CompleteService();
 // Завершение обслуживания
 };
