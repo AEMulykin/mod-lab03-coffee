@@ -1,45 +1,55 @@
 // Copyright 2022 UNN-IASR
 #pragma once
-#include <array>
+#include <iostream>
 #include <string>
+#include <array>
 
-enum AutomatonStates { OFF, WAIT, ACCEPT, CHECK, COOK };
+// Определение возможных состояний автомата
+enum STATES {OFF, WAIT, ACCEPT, CHECK, COOK};
 
-using std::array;
-using std::string;
-
+// Автомат для продажи напитков
 class Automata {
- private:
-        AutomatonStates state; // Current state of the automaton
-        int cash; // Current cash balance
-        array<string, 10> menu {{
-            "DoubleEspresso",
-            "Americano",
-            "Cappuccino",
-            "Latte",
-            "FlatWhite",
-            "Macchiato",
-            "BlackTea",
-            "GreenTea",
-            "Cacao",
-            "HotChocolate"
-        }};
-        int option; // Selected drink option
-        array<int, 10> prices {{
-            90, 80, 100, 322, 160, 180, 120, 140, 130, 150
-        }};
+private:
+    STATES currentState;  // Текущее состояние
+    int totalCash;        // Текущая сумма денег
+    int beverageChoice;   // Выбранный напиток
 
- public:
-Automata();
-    void powerOn(); // replaced on()
-    void powerOff(); // replaced off()
-    void insertCoin(int amount); // replaced coin(int)
-    void presentMenu(); // replaced getMenu()
-    void displayState(); // replaced getState()
-    void selectOption(int choice); // replaced choice(int)
-    bool isPurchasePossible(); // replaced check()
-    int revealCash(); // replaced getCash()
-    void reclaimCash(); // new function to replace cancel()
-    void brewBeverage(); // replaces cook()
-    void concludeTransaction(); // replaces finish()
+    // Меню напитков с соответствующими ценами
+    const std::array<std::string, 10> beverages = {
+        "Espresso", "Americano", "Cappuccino",
+        "Latte", "FlatWhite", "Macchiato",
+        "BlackTea", "GreenTea", "Cacao", "HotChocolate"};
+    const std::array<int, 10> prices = {
+        80, 100, 150, 180, 160, 190, 120, 120, 140, 170};
+
+    void displayMenu();     // Вывод меню напитков
+    void showState();       // Отображение текущего состояния автомата
+
+public:
+    Automata();  // Конструктор
+    void switchOn();   // Включение автомата
+    void switchOff();  // Выключение автомата
+    void insertCash(int amount);    // Внесение денег
+    void selectBeverage(int choice);  // Выбор напитка
+    bool isEnoughCash();   // Проверка достаточности средств
+    int returnChange();    // Возврат сдачи
+    void abort();          // Отмена операции
+    void prepare();        // Приготовление напитка
+    void completeService(); // Завершение обслуживания
 };
+
+Automata::Automata() : currentState(OFF), totalCash(0), beverageChoice(0) {}
+
+void Automata::displayMenu() {
+    for (size_t i = 0; i < beverages.size(); ++i) {
+        std::cout << i + 1 << ". " << beverages[i] << " - " << prices[i] << '\n';
+    }
+}
+
+void Automata::showState() {
+    const char* stateDescriptions[] = {
+        "Offline", "Waiting for action", "Accepting cash",
+        "Checking selection", "Preparing beverage"
+    };
+    std::cout << "Current state: " << stateDescriptions[currentState] << '\n';
+}
