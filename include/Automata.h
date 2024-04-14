@@ -1,50 +1,48 @@
 // Copyright 2022 UNN-IASR
 #pragma once
-#include <iostream>
 #include <vector>
-#include <string>
+#include <array>
 
-// Использование enum class для обеспечения типобезопасности
-enum class State {
-    Off,
-    Wait,
-    Accept,
-    Check,
-    Cook
+enum MachineStates {
+    StateOff, StateWait, StateAccept, StateCheck, StateCook
 };
 
-class Automata {
+using std::vector;
+using std::array;
+using std::string;
+
+class BeverageAutomata {
  private:
-    State currentState_;  // Текущее состояние автомата
-    int cash_;            // Текущая сумма денег
-    std::vector<std::string> menu_ = {
-        "Ristretto",
-        "Lungo",
-        "Doppio",
-        "Corretto",
-        "Affogato",
-        "IrishCoffee",
-        "Frappe",
-        "EspressoConPanna",
-        "Mochaccino",
-        "Bicerin"
-    };  // Измененные названия кофе
-    int selection_;       // Выбор напитка
-    std::vector<int> prices_ = {
-        70, 90, 110, 130, 120, 200, 160, 150, 180, 160
-    };  // Обновленная структура с новыми ценами
+        MachineStates currentState;  // Current state of the machine
+        int currentCash;  // Current amount of money held
+        array<string, 10> beverageOptions {{
+            "Espresso",
+            "Americano",
+            "Cappuccino",
+            "Latte",
+            "FlatWhite",
+            "Macchiato",
+            "BlackTea",
+            "GreenTea",
+            "Cacao",
+            "HotChocolate"
+        }};
+        int selectedOption;  // User's beverage selection
+        array<int, 10> beveragePrices {{
+            60, 80, 130, 140, 110, 290, 120, 100, 120, 150
+        }};
 
  public:
-    Automata();
-    void TurnOn();             // Включение автомата
-    void TurnOff();            // Выключение автомата
-    void InsertCoin(int cash); // Занесение денег на счет пользователем
-    void DisplayMenu();        // Отображение меню
-    std::string GetState() const;         // Получение текущего состояния для пользователя
-    void SelectDrink(int option); // Выбор напитка пользователем
-    bool IsPaymentSufficient();   // Проверка наличия необходимой суммы
-    int ReturnCash();             // Возврат сдачи/денег
-    void CancelService();         // Отмена услуги пользователем
-    void PrepareDrink();          // Приготовление напитка
-    void FinishService();         // Завершение обслуживания
+        BeverageAutomata();
+        void activateMachine();  // Turn the machine on
+        void deactivateMachine();  // Turn the machine off
+        void insertCoins(int amount);  // User deposits money
+        void displayMenu();  // Display menu to user
+        void displayCurrentState();  // Show current state to the user
+        void makeSelection(int choice);  // User makes a beverage selection
+        bool validateSelection();  // Check if enough money has been provided
+        int returnChange();  // Return change/money to the user
+        void abortTransaction();  // User cancels the transaction
+        void initiateBrewing();  // Simulate beverage preparation
+        void completeService();  // End user service
 };
