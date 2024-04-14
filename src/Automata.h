@@ -31,8 +31,8 @@ class Automata {
     static constexpr std::array<int, 10> prices_ = {
         80, 100, 150, 180, 160, 190, 120, 120, 140, 170
     };
- public:
 
+ public:
 Automata();//Конструктор
 void On();
 //Включение автомата
