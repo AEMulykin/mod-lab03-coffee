@@ -13,7 +13,7 @@ class Automata {
         AutomatonStates state; // Current state of the automaton
         int cash; // Current cash balance
         array<string, 10> menu {{
-            "Espresso",
+            "DoubleEspresso",
             "Americano",
             "Cappuccino",
             "Latte",
@@ -26,7 +26,7 @@ class Automata {
         }};
         int option; // Selected drink option
         array<int, 10> prices {{
-            80, 100, 150, 180, 160, 190, 120, 120, 140, 170
+            90, 80, 100, 322, 160, 180, 120, 140, 130, 150
         }};
 
  public:
