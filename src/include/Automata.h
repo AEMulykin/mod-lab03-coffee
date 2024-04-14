@@ -33,27 +33,16 @@ class Automata {
     };
 
  public:
-Automata();//Конструктор
-void On();
-//Включение автомата
-void Off();
-//Выключение автомата
-    void InsertCoin(int amount);
-//Внесение денег
-    void DisplayMenu() const;
-//Отображение меню
-    std::string GetCurrentState() const;
-//Получение описания текущего состояния
-    void SelectDrink(int option);
-//Выбор напитка пользователем
-    bool IsSufficientAmount() const;
-//Проверка достаточности внесенной суммы
-int ReturnChange();
-//Возврат сдачи/денег
-    void Cancel();
-// Отмена сессии
-    void PrepareDrink();
-// Имитация процесса приготовления напитка
-    void CompleteService();
-// Завершение обслуживания
+        Automata();
+        void on();  // - включение автомата
+        void off();  // - выключение автомата
+        void coin(int x);  // - занесение денег на счёт пользователем
+        void getMenu();  // - считывание меню
+        void getState();  // - считывание текущего состояния для пользователя
+        void choice(int x);  // - выбор напитка пользователем
+        bool check();  // - проверка наличия необходимой суммы
+        int getCash();  // - возвращает сдачу/деньги
+        void cancel();  // - отмена сеанса обслуживания пользователем
+        void cook();  // - имитация процесса приготовления напитка
+        void finish();  // - завершение обслуживания пользователя
 };
