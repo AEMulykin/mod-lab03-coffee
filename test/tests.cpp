@@ -24,7 +24,7 @@ TEST_F(AutomataTest, ThrowsError_WhenOperationIsIncorrect) {
 }
 TEST_F(AutomataTest, StateChangesCorrectly_AfterOperations) {
     // Test state transitions
-    machine.PowerOn();
+ machine.PowerOn();
  EXPECT_EQ(WAIT, machine.GetState());
  machine.InsertCoin(1000);
  EXPECT_EQ(ACCEPT, machine.GetState());
