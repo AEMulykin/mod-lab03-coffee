@@ -1,118 +1,74 @@
 // Copyright 2022 UNN-IASR
+#include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include <string>
-#include <stdexcept>
 #include "Automata.h"
-namespace std_io = std;  // Alias namespace for cleaner code
-Automata::Automata() : state(OFF), cash(0), option(0) {
-    displayState();
+void Automata::on() {
+if (this->state == OFF) {
+this->state = WAIT;
 }
-void Automata::presentMenu() {
-    for (std::size_t i = 0; i < 10; ++i) {
-        std_io::cout << i+1 << ": " << menu[i] << " - " << prices[i] << std_io::endl;
-    }
 }
-void Automata::powerOn() {
-    if (state == OFF) {
-        state = WAIT;
-        std_io::cout << "The beverage machine is now active." << std_io::endl;
-        presentMenu();
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
+void Automata::off() {
+this->state = OFF;
 }
-void Automata::powerOff() {
-    if (state == WAIT) {
-        state = OFF;
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
+void Automata::coin(int money) {
+if (this->state != OFF) {
+this->cash += money;
+this->state = ACCEPT;
 }
-void Automata::insertCoin(int amount) {
-    if (state == WAIT || state == ACCEPT) {
-        if (amount < 0) {
-            throw std::invalid_argument("Error: Invalid amount.");
-        }
-        state = ACCEPT;
-        cash += amount;
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
 }
-
-void Automata::reclaimCash() {
-    if (state == ACCEPT || state == CHECK) {
-        state = WAIT;
-        std_io::cout << "Please add more coins to proceed with the purchase." << std_io::endl;
-        revealCash();
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
+void Automata::etMenu(std::map<int, std::string> menu,
+std::map <int, int> prices) {
+this->menu.clear();
+this->prices.clear();
+for (int i = 0; i < menu.size(); i++) {
+this->menu[i] = menu[i];
 }
-
-void Automata::selectOption(int choice) {
-    if (state == ACCEPT) {
-        if (std::size(menu) <= choice || choice <= 0) {
-            throw std::invalid_argument("Error: Invalid selection.");
-        }
-        state = CHECK;
-        option = choice;
-        std_io::cout << "Selection made: " << menu[option - 1] << std_io::endl;
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
+for (int i = 0; i < prices.size(); i++)
+this->prices[i] = prices[i];
+if (this->prices.size() < this->menu.size()) {
+for (int i = 0; i < this->menu.size() - this->prices.size(); i++) {
+this->prices[this->prices.size()] = 50;
 }
-
-bool Automata::isPurchasePossible() {
-    if (state == CHECK) {
-        bool isAffordable = cash >= prices[option - 1];
-        displayState();
-        return isAffordable;
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
 }
-
-void Automata::brewBeverage() {
-    if (state == CHECK) {
-        state = COOK;
-        cash -= prices[option - 1];
-        revealCash();
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
 }
-
-void Automata::concludeTransaction() {
-    if (state == COOK) {
-        state = WAIT;
-        revealCash();
-        displayState();
-    } else {
-        throw std::domain_error("Error: Invalid operation.");
-    }
+States Automata::getState() {
+return this->state;
 }
-int Automata::revealCash() {
-    std_io::cout << "Remaining Balance: " << cash << std_io::endl;
-    return cash;
+int Automata::getCash() {
+return this->cash;
 }
-void Automata::displayState() {
-    using std_io::cout;
-    using std_io::endl;
-
-    const char* stateMessages[] = {
-        "Beverage machine is deactivated.",
-        "Beverage machine awaits transaction.",
-        "Please deposit coins.",
-        "Verifying transaction...",
-        "Preparing your beverage..."
-    };
-
-    cout << stateMessages[state] << endl;
+void Automata::choiceuser(int choice) {
+if (this->state != OFF) {
+this->choice = choice;
+this->state = ACCEPT;
+} else {
+this->state = WAIT;
+}
+}
+void Automata::check() {
+if (this->state == ACCEPT) {
+if (this->cash < this->prices[this->choice]) {
+this->state = WAIT;
+} else {
+this->state = COOK;
+}
+} else {
+this->state = WAIT;
+}
+}
+void Automata::cancel() {
+if (this->state != OFF) {
+this->state = WAIT;
+}
+}
+void Automata::cook() {
+if (this->state == COOK) {
+this->cash -= this->prices[this->choice];
+this->state = WAIT;
+}
+}
+void Automata::finish() {
+this->state = WAIT;
 }
