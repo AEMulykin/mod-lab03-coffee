@@ -3,19 +3,15 @@
 #include <string>
 #include <stdexcept>
 #include "Automata.h"
-
 namespace std_io = std;  // Alias namespace for cleaner code
-
 Automata::Automata() : state(OFF), cash(0), option(0) {
     displayState();
 }
-
 void Automata::presentMenu() {
     for (std::size_t i = 0; i < 10; ++i) {
         std_io::cout << i+1 << ": " << menu[i] << " - " << prices[i] << std_io::endl;
     }
 }
-
 void Automata::powerOn() {
     if (state == OFF) {
         state = WAIT;
@@ -26,7 +22,6 @@ void Automata::powerOn() {
         throw std::domain_error("Error: Invalid operation.");
     }
 }
-
 void Automata::powerOff() {
     if (state == WAIT) {
         state = OFF;
@@ -35,7 +30,6 @@ void Automata::powerOff() {
         throw std::domain_error("Error: Invalid operation.");
     }
 }
-
 void Automata::insertCoin(int amount) {
     if (state == WAIT || state == ACCEPT) {
         if (amount < 0) {
@@ -104,12 +98,10 @@ void Automata::concludeTransaction() {
         throw std::domain_error("Error: Invalid operation.");
     }
 }
-
 int Automata::revealCash() {
     std_io::cout << "Remaining Balance: " << cash << std_io::endl;
     return cash;
 }
-
 void Automata::displayState() {
     using std_io::cout;
     using std_io::endl;
