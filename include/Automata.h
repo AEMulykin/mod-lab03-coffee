@@ -1,21 +1,18 @@
 // Copyright 2022 UNN-IASR
 #pragma once
-#include <vector>
 #include <array>
+#include <string>
 
-enum MachineStates {
-    StateOff, StateWait, StateAccept, StateCheck, StateCook
-};
+enum AutomatonStates { OFF, WAIT, ACCEPT, CHECK, COOK };
 
-using std::vector;
 using std::array;
 using std::string;
 
-class BeverageAutomata {
+class Automata {
  private:
-        MachineStates currentState;  // Current state of the machine
-        int currentCash;  // Current amount of money held
-        array<string, 10> beverageOptions {{
+        AutomatonStates state; // Current state of the automaton
+        int cash; // Current cash balance
+        array<string, 10> menu {{
             "Espresso",
             "Americano",
             "Cappuccino",
@@ -27,22 +24,22 @@ class BeverageAutomata {
             "Cacao",
             "HotChocolate"
         }};
-        int selectedOption;  // User's beverage selection
-        array<int, 10> beveragePrices {{
-            60, 80, 130, 140, 110, 290, 120, 100, 120, 150
+        int option; // Selected drink option
+        array<int, 10> prices {{
+            80, 100, 150, 180, 160, 190, 120, 120, 140, 170
         }};
 
  public:
-        BeverageAutomata();
-        void activateMachine();  // Turn the machine on
-        void deactivateMachine();  // Turn the machine off
-        void insertCoins(int amount);  // User deposits money
-        void displayMenu();  // Display menu to user
-        void displayCurrentState();  // Show current state to the user
-        void makeSelection(int choice);  // User makes a beverage selection
-        bool validateSelection();  // Check if enough money has been provided
-        int returnChange();  // Return change/money to the user
-        void abortTransaction();  // User cancels the transaction
-        void initiateBrewing();  // Simulate beverage preparation
-        void completeService();  // End user service
+        Automata(); // Constructor that initializes the automaton state
+        void presentMenu(); // Display the beverage menu to the user
+        void powerOn();  // Activate the machine
+        void powerOff();  // Deactivate the machine
+        void insertCoin(int amount);  // Accept money deposited by the user
+        void reclaimCash();  // Refund the money to the user
+        void selectOption(int choice);  // User makes a beverage choice
+        bool isPurchasePossible();  // Verify if the user has provided enough money
+        void brewBeverage();  // Begin preparing the selected beverage
+        void concludeTransaction();  // Finish the current user session
+        int revealCash();  // Show current cash balance and return change if applicable
+        void displayState();  // Show current state of the automaton to the user
 };
