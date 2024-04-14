@@ -2,22 +2,21 @@
 #include "Automata.h"
 
 int main() {
-    Automata beverageAutomaton;  // Create an Automata instance
-    beverageAutomaton.powerOn();  // Power on the beverage machine
-    beverageAutomaton.insertCoin(800);  // Insert money into the machine
-
+    Automata beverageAutomaton;
+    beverageAutomaton.powerOn();
+    beverageAutomaton.insertCoin(800);
     try {
-        beverageAutomaton.selectOption(4);  // Make a selection for the beverage
+        beverageAutomaton.selectOption(4);
         if (beverageAutomaton.isPurchasePossible()) {
-            beverageAutomaton.brewBeverage();  // Start brewing the beverage
-            beverageAutomaton.concludeTransaction();  // Finish transaction once done
+            beverageAutomaton.brewBeverage();
+            beverageAutomaton.concludeTransaction();
         } else {
-            beverageAutomaton.reclaimCash();  // Reclaim the cash if not enough
+            beverageAutomaton.reclaimCash();
         }
     } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;  // Handle any exceptions that may arise
+        std::cerr << e.what() << std::endl;
     }
 
-    beverageAutomaton.powerOff();  // Turn the machine off when done
-    return 0;  // Exit the program
+    beverageAutomaton.powerOff();
+    return 0;
 }
