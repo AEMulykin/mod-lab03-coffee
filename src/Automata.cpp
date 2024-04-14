@@ -17,8 +17,7 @@ void Automata::DisplayMenu() const {
 }
 void Automata::PowerOn() {
     if (state != OFF) {
-        throw domain_error("Machine is already running.");
-    }    
+        throw domain_error("Machine is already running.");}
     state = WAIT;
     cout << "Machine activated." << endl;
     DisplayMenu();
@@ -26,8 +25,7 @@ void Automata::PowerOn() {
 }
 void Automata::PowerOff() {
     if (state != WAIT) {
-        throw domain_error("Machine is not in a wait state.");
-    }    
+        throw domain_error("Machine is not in a wait state.");}    
     state = OFF;
     DisplayState();
 }
@@ -47,8 +45,7 @@ void Automata::CancelTransaction() {
     if (state != ACCEPT && state != CHECK) {
         throw domain_error("Cannot cancel at the current stage.");
     }
-    cout << "Transaction cancelled. Please, take your money back: " 
-    << cash << "₽" << endl;
+    cout << "Transaction cancelled"<< cash << "₽" << endl;
     cash = 0;
     state = WAIT;
     DisplayState();
