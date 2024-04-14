@@ -30,16 +30,16 @@ class Automata {
         }};
 
  public:
-        Automata(); // Constructor that initializes the automaton state
-        void presentMenu(); // Display the beverage menu to the user
-        void powerOn();  // Activate the machine
-        void powerOff();  // Deactivate the machine
-        void insertCoin(int amount);  // Accept money deposited by the user
-        void reclaimCash();  // Refund the money to the user
-        void selectOption(int choice);  // User makes a beverage choice
-        bool isPurchasePossible();  // Verify if the user has provided enough money
-        void brewBeverage();  // Begin preparing the selected beverage
-        void concludeTransaction();  // Finish the current user session
-        int revealCash();  // Show current cash balance and return change if applicable
-        void displayState();  // Show current state of the automaton to the user
+Automata();
+    void powerOn(); // replaced on()
+    void powerOff(); // replaced off()
+    void insertCoin(int amount); // replaced coin(int)
+    void presentMenu(); // replaced getMenu()
+    void displayState(); // replaced getState()
+    void selectOption(int choice); // replaced choice(int)
+    bool isPurchasePossible(); // replaced check()
+    int revealCash(); // replaced getCash()
+    void reclaimCash(); // new function to replace cancel()
+    void brewBeverage(); // replaces cook()
+    void concludeTransaction(); // replaces finish()
 };
