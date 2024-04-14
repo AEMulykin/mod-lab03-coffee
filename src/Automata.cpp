@@ -95,4 +95,37 @@ void Automata::PrepareDrink() {
         cash_ -= prices_[option_];
         cout << "Your drink " << menu_[option_] << " is being prepared..." << endl;
         DisplayState();
+    } else {
+        throw domain_error("Error: Insufficient funds or wrong machine state.");
     }
+}
+
+void Automata::CompleteService() {
+    if (state_ == States::COOK) {
+        state_ = States::WAIT;
+        ReturnChange();
+        cout << "Your drink is ready. Please, take your drink." << endl;
+        DisplayState();
+    } else {
+        throw domain_error("Error: The drink is not ready yet.");
+    }
+}
+
+int Automata::ReturnChange() {
+    cout << "Your change is " << cash_ << " RUB" << endl;
+    int change = cash_;
+    cash_ = 0;
+    return change;
+}
+
+void Automata::DisplayState() const {
+    static const char* state_messages[] = {
+        "The drink machine is off.",
+        "The drink machine is waiting for your action.",
+        "Please insert money.",
+        "Select your drink or check your balance.",
+        "Your drink is being prepared. Please, wait..."
+    };
+
+    cout << state_messages[static_cast<int>(state_)] << endl;
+}
