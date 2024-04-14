@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "Automata.h"
 class AutomataTest : public ::testing::Test {
-protected:
+ protected:
 Automata machine;
     void SetUp() override {}
 };
