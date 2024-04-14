@@ -1,43 +1,58 @@
 // Copyright 2022 GHA Test Team
+
 #include <gtest/gtest.h>
 #include "Automata.h"
-class AutomataTest : public ::testing::Test {
- protected:
-Automata machine;
-    void SetUp() override {}
-};
-TEST_F(AutomataTest, ThrowsError_WhenOperationIsIncorrect) {
-machine.SetState(CHECK);
-EXPECT_THROW(machine.PowerOn(), std::domain_error);
-EXPECT_THROW(machine.PowerOff(), std::domain_error);
-machine.SetState(OFF);
-EXPECT_THROW(machine.InsertCoin(100), std::domain_error);
-EXPECT_THROW(machine.MakeDrink(), std::domain_error);
-machine.SetState(WAIT);
-EXPECT_THROW(machine.CancelTransaction(), std::domain_error);
-EXPECT_THROW(machine.SelectOption(3), std::domain_error);
-machine.SetState(ACCEPT);
-EXPECT_THROW(machine.IsPaymentSufficient(), std::domain_error);
-EXPECT_THROW(machine.CompleteTransaction(), std::domain_error);
-machine.SetState(ACCEPT);
-EXPECT_THROW(machine.InsertCoin(-500), std::invalid_argument);
+TEST(TEST1, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    EXPECT_EQ(States::WAIT, automata.getState());
 }
-TEST_F(AutomataTest, StateChangesCorrectly_AfterOperations) {
-    // Test state transitions
-machine.PowerOn();
-EXPECT_EQ(WAIT, machine.GetState());
-machine.InsertCoin(1000);
-EXPECT_EQ(ACCEPT, machine.GetState());
-machine.SelectOption(5);
-EXPECT_EQ(CHECK, machine.GetState());
-machine.MakeDrink();
-EXPECT_EQ(COOK, machine.GetState());
-machine.CompleteTransaction();
-EXPECT_EQ(WAIT, machine.GetState());
-machine.InsertCoin(10);
-machine.SelectOption(5);
-machine.CancelTransaction();
-EXPECT_EQ(WAIT, machine.GetState());
-machine.PowerOff();
-EXPECT_EQ(OFF, machine.GetState());
+
+TEST(TEST2, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    automata.coin(250);
+    automata.coin(300);
+    EXPECT_EQ(States::ACCEPT, automata.getState());
+}
+
+TEST(TEST3, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    automata.coin(250);
+    automata.coin(300);
+    automata.choiceuser(3);
+    EXPECT_EQ(States::ACCEPT, automata.getState());
+}
+
+TEST(TEST4, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    automata.coin(250);
+    automata.coin(300);
+    automata.choiceuser(3);
+    automata.check();
+    EXPECT_EQ(States::COOK, automata.getState());
+}
+
+TEST(TEST5, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    automata.coin(800);
+    automata.choiceuser(5);
+    automata.check();
+    automata.cook();
+    EXPECT_EQ(300, automata.getCash());
+}
+
+TEST(TEST6, TrueOrFalse) {
+    Automata automata;
+    automata.on();
+    automata.coin(800);
+    automata.choiceuser(5);
+    automata.check();
+    automata.cook();
+    automata.finish();
+    automata.off();
+    EXPECT_EQ(States::OFF, automata.getState());
 }
