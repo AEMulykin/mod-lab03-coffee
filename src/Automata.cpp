@@ -25,7 +25,7 @@ void Automata::PowerOn() {
 }
 void Automata::PowerOff() {
     if (state != WAIT) {
-        throw domain_error("Machine is not in a wait state.");}    
+        throw domain_error("Machine is not in a wait state.");}
     state = OFF;
     DisplayState();
 }
