@@ -1,37 +1,19 @@
 // Copyright 2022 UNN-IASR
-
 #include <iostream>
 #include <string>
 #include "Automata.h"
 
 int main() {
-    // Создание объекта automat типа Automata
-    Automata automat;
-
-    // Запуск автомата
-    automat.PowerOn();
-
-    // Внесение суммы денег в автомат
-    automat.InsertCoin(1000);
-
-    // Выбор напитка (предположим, что FlatWhite - это позиция 5)
-    const int flatWhiteOption = 5;
-    automat.SelectOption(flatWhiteOption);
-
-    // Проверка наличия достаточной суммы денег
-    if (automat.IsPaymentSufficient()) {
-        // Приготовление напитка
-        automat.MakeDrink();
-
-        // Завершение транзакции
-        automat.CompleteTransaction();
+    Automata drinking_machine;
+    drinking_machine.on();
+    drinking_machine.coin(800);
+    drinking_machine.choice(4);
+    if (drinking_machine.check()) {
+        drinking_machine.cook();
+        drinking_machine.finish();
     } else {
-        // Отмена операции в случае недостаточной суммы
-        automat.CancelTransaction();
+        drinking_machine.cancel();
     }
-
-    // Выключение автомата
-    automat.PowerOff();
-
+    drinking_machine.off();
     return 0;
 }
